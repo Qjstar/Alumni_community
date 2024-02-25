@@ -3,6 +3,8 @@ import { ref, reactive } from 'vue';
 import jpg1 from '@/assets/images/1.jpg';
 import jpg2 from '@/assets/images/2.jpg';
 import jpg3 from '@/assets/images/3.jpg';
+import TopBar from '@/components/TopBar.vue';
+
 const carousel_list = reactive([
   {
     carouselUrl: jpg1,
@@ -50,7 +52,7 @@ const onLoad = () => {
     loading.value = false;
 
     // 数据全部加载完成
-    if (tj_list.value.length >= 50) {
+    if (tj_list.value.length >= 5) {
       finished.value = true;
     }
   }, 1000);
@@ -63,12 +65,8 @@ function goTo(url: any) {
 
 <template>
   <div class="home">
-    <div class="topbar">
-      <van-row justify="space-between">
-        <van-col :span="20">深圳职业技术大学</van-col>
-        <van-col :span="4"><van-icon name="bell" />公告</van-col>
-      </van-row>
-    </div>
+
+    <top-bar title="深圳职业技术大学"><van-icon name="bell" />公告</top-bar>
     <div class="banner">
       <van-swipe class="my-swipe" :autoplay="3000" indicator-color="#f05" lazy-render>
         <van-swipe-item v-for="(item, index) in carousel_list" :key="index">
@@ -121,14 +119,7 @@ function goTo(url: any) {
 
 <style scoped>
 .home {
-  .topbar {
-    background: rgb(178, 17, 6);
-    border-radius: 8px;
-    height: 8vh;
-    line-height: 8vh;
-    padding: 0 5vw;
-    color: #fff;
-  }
+ 
   .my-swipe {
     img {
       width: 100%;

@@ -6,7 +6,6 @@ import axios from 'axios';
  */
 const HttpClient = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
-
 });
 
 /**
@@ -15,7 +14,10 @@ const HttpClient = axios.create({
  */
 HttpClient.interceptors.request.use(
   (config) => {
-    const token = '';
+    const storekey = localStorage.getItem('storekey');
+    const token = JSON.parse(storekey).token;
+    // console.log(token);
+
     config.headers.authorization = 'Bearer ' + token;
     return config;
   },

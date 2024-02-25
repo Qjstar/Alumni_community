@@ -11,6 +11,7 @@ const { updateToken, updateUserInfo } = userStore;
 
 const phone = ref('');
 const password = ref('');
+const passwordVisible = ref(false);
 const image_code_pd = ref('');
 const image_code = reactive({
   change_img_code: false, // 刷新验证码
@@ -36,25 +37,39 @@ const validatorImgCode = (value) => {
   // 比较加密后的验证码值是否与后端返回的加密验证码值相同
   if (encryptedValue === image_code.img_code) {
     return true;
-  } else{
-    return "验证码不正确"
+  } else {
+    return '验证码不正确';
   }
 };
+const togglePasswordVisible = () => {
+  passwordVisible.value = !passwordVisible.value;
+};
+
+
 const onSubmit = async (values) => {
   const { data } = await login({ phone: values.phone, password: values.password });
   if (!data) {
     showFailToast('用户名或密码错误');
   }
+  console.log(data)
   if (data.token != null) {
-    showSuccessToast('登录成功');
-    router.push('/');
     updateUserInfo({
+      userId: data.id,
       name: data.username,
       nickname: data.nickname,
       signature: data.signature ? data.signature : null,
       role: data.role,
+      avatar: data.avatar,
+      user_status: data.user_status,
     });
     updateToken(data.token);
+    if (data.user_status == '已认证') {
+      router.push('/');
+      showSuccessToast('登录成功');
+    } else {
+      router.push('/user_status');
+      showSuccessToast('登录成功');
+    }
     // console.log('submit', values);
   }
 };
@@ -78,12 +93,15 @@ const toRegister = () => {
         />
         <van-field
           v-model="password"
-          type="password"
+          :type="passwordVisible ? 'text' : 'password'"
           name="password"
           label="密码"
           placeholder="密码"
           :rules="[{ required: true, message: '请填写密码' }]"
+          right-icon="eye-o"
+          @click-right-icon="togglePasswordVisible"
         />
+
         <van-row :gutter="5" justify="space-between">
           <van-col span="14">
             <van-field
@@ -119,4 +137,3 @@ const toRegister = () => {
 .login {
 }
 </style>
-@/apis/login

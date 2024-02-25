@@ -27,6 +27,11 @@ function isValidPassword(password) {
   return regex.test(password);
 }
 
+const passwordVisible = ref(false);
+
+const togglePasswordVisible = () => {
+  passwordVisible.value = !passwordVisible.value;
+};
 
 const validatorPassword = () => {
   if (isValidPassword(password._value)) {
@@ -124,19 +129,23 @@ const validatorImgCode = (value) => {
         />
         <van-field
           v-model="password"
-          type="password"
+          :type="passwordVisible ? 'text' : 'password'"
           name="password"
           label="密码"
           placeholder="密码：需要包含大小写和特殊字符"
           :rules="[{ validator: validatorPassword, required: true, message: '请输入密码' }]"
+          right-icon="eye-o"
+          @click-right-icon="togglePasswordVisible"
         />
         <van-field
           v-model="pass_rep"
-          type="password"
+          :type="passwordVisible ? 'text' : 'password'"
           name="pass_rep"
           label="重复密码"
           placeholder="重复密码"
           :rules="[{ validator: validatorMessage, required: true, message: '请再次输入密码' }]"
+          right-icon="eye-o"
+          @click-right-icon="togglePasswordVisible"
         />
         <van-field
           v-model="role"

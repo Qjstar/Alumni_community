@@ -7,10 +7,13 @@ export const useUserStore = defineStore('user', {
   state: () => {
     return {
       userInfo: {
+        userId: '',
         name: '',
         nickname: '',
         signature: '',
         role: '',
+        avatar: '',
+        user_status: '',
       },
       token: '',
     };
@@ -20,7 +23,15 @@ export const useUserStore = defineStore('user', {
   },
   actions: {
     //更新整个对象
-    updateUserInfo(userInfo: { name: string; nickname:string; signature:string; role: string}) {
+    updateUserInfo(userInfo: {
+      userId: string;
+      name: string;
+      nickname: string;
+      signature: string;
+      role: string;
+      avatar: string;
+      user_status: string;
+    }) {
       this.userInfo = userInfo;
     },
     //更新对象中某个属性
@@ -36,7 +47,7 @@ export const useUserStore = defineStore('user', {
   //   persist: true,
   persist: {
     key: 'storekey', // 修改存储的键名，默认为当前 Store 的 id
-    storage: window.sessionStorage, // 存储位置修改为 sessionStorage
+    storage: window.localStorage, // 存储位置修改为 sessionStorage
   },
   // 自定义持久化字段
   //     persist: {

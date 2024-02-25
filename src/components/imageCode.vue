@@ -1,4 +1,3 @@
-
 <script>
 	import md5 from 'md5';
 	import {
@@ -29,7 +28,7 @@
                         // 默认值 
 			const defaultData = {
 				identifyCode: '', // 验证码值，未加密的
-				identifyCodes: '0123456789abcdwerwshdjeJKDHRJHKOOPLMKQ', // 生成验证码的元素，可以加入字母
+				identifyCodes: '0123456789abcdefg', // 生成验证码的元素，可以加入字母
 				fontSizeMin: 20, // 图片上验证文字的最小值
 				fontSizeMax: 40, // 图片上验证文字的最小值
 				backgroundColorMin: 180, // 图片背景色值最小
