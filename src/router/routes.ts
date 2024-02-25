@@ -27,7 +27,7 @@ const routes = [
       },
       {
         path: "alumni_circle",
-        component: () => import('@/pages/alumni_circle.vue'),
+        component: () => import('@/pages/circle/alumni_circle.vue'),
       },
       {
         path: "activity",
@@ -35,7 +35,12 @@ const routes = [
       },
       {
         path: "my",
-        component: () => import("@/pages/my.vue"),
+        component: () => import("@/pages/my/my.vue"),
+      },
+      {
+        path: '/activity_info/:id',
+        name: 'activity_info',
+        component: () => import('@/pages/activity_info.vue')
       },
     ],
   },
@@ -57,7 +62,7 @@ const routes = [
   },
   {
     path: "/push_alumni_content",
-    component: () => import('@/pages/push_alumni_content.vue'),
+    component: () => import('@/pages/circle/push_alumni_content.vue'),
   },
   {
     path: "/:pathMatch(.*)*",

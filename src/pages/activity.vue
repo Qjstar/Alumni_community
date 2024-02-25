@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue';
 import ListCard from '@/components/ListCard.vue';
 import { activityList } from '@/apis/activity_list';
 import TopBar from '@/components/TopBar.vue';
+import router from '@/router';
 const active = ref(0);
 
 let activity_list = ref([
@@ -38,6 +39,11 @@ const getList = async () => {
   let { data } = await activityList(1, 10);
   activity_list = data.rows.map((row: any) => row);
 };
+
+const get_activity_info = (e:string) => {
+  router.push(`/activity_info/${e}`)
+}
+
 onMounted(async () => {
   await getList();
 });
@@ -58,6 +64,7 @@ const pagereload = () => {
             :desc="item.activity_description"
             :time="item.activity_time.slice(0, 10)"
             :themeimg="item.activity_image"
+            @click="get_activity_info(item.id)"
           />
         </div>
       </van-tab>
