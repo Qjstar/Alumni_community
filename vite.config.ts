@@ -11,7 +11,7 @@ import viteCompression from 'vite-plugin-compression'
 
 // https://vitejs.dev/config/
 export default ({mode})=> {
-  console.log('mode', loadEnv(mode, process.cwd()).VITE_BASE_URL); //127.0.0.1:9000/api 
+  console.log('mode', loadEnv(mode, process.cwd()).VITE_BASE_URL); 
   return defineConfig({
     plugins: [
       vue(),

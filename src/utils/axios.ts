@@ -1,11 +1,13 @@
+import router from '@/router';
 import axios from 'axios';
-
+import {useUserStore} from "@/store/user"
 /*
  * 创建实例
  * 与后端服务通信
  */
 const HttpClient = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
+  timeout: 5000,
 });
 
 /**
@@ -36,6 +38,13 @@ HttpClient.interceptors.response.use(
     return config;
   },
   (error) => {
+    console.log(error);
+    const user = useUserStore();
+    const status = error.response.status;
+    if (status === 403) {
+      user.updateToken("")
+      router.push("login")
+    }
     return Promise.reject(error);
   },
 );

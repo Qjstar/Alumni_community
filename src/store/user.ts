@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import { signatureProps } from 'vant/lib/signature/Signature';
 
 // defineStore 第一个参数是id，必需且值唯一
 export const useUserStore = defineStore('user', {
@@ -9,6 +8,7 @@ export const useUserStore = defineStore('user', {
       userInfo: {
         userId: '',
         name: '',
+        phone: "",
         nickname: '',
         signature: '',
         role: '',
@@ -48,6 +48,7 @@ export const useUserStore = defineStore('user', {
   persist: {
     key: 'storekey', // 修改存储的键名，默认为当前 Store 的 id
     storage: window.localStorage, // 存储位置修改为 sessionStorage
+    
   },
   // 自定义持久化字段
   //     persist: {
