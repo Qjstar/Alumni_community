@@ -8,7 +8,6 @@ export const useUserStore = defineStore('user', {
       userInfo: {
         userId: '',
         name: '',
-        phone: "",
         nickname: '',
         signature: '',
         role: '',
