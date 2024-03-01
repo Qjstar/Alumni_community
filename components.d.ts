@@ -7,18 +7,6 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    ElAside: typeof import('element-plus/es')['ElAside']
-    ElButton: typeof import('element-plus/es')['ElButton']
-    ElCard: typeof import('element-plus/es')['ElCard']
-    ElCol: typeof import('element-plus/es')['ElCol']
-    ElContainer: typeof import('element-plus/es')['ElContainer']
-    ElFooter: typeof import('element-plus/es')['ElFooter']
-    ElHeader: typeof import('element-plus/es')['ElHeader']
-    ElIcon: typeof import('element-plus/es')['ElIcon']
-    ElMain: typeof import('element-plus/es')['ElMain']
-    ElRow: typeof import('element-plus/es')['ElRow']
-    Header: typeof import('./src/components/Header.vue')['default']
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     ImageCode: typeof import('./src/components/imageCode.vue')['default']
     ListCard: typeof import('./src/components/ListCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
@@ -48,10 +36,7 @@ declare module 'vue' {
     VanTabbar: typeof import('vant/es')['Tabbar']
     VanTabbarItem: typeof import('vant/es')['TabbarItem']
     VanTabs: typeof import('vant/es')['Tabs']
-    VanTag: typeof import('vant/es')['Tag']
-    VantCol: typeof import('vant/es')['tCol']
     VanTextEllipsis: typeof import('vant/es')['TextEllipsis']
-    VantRow: typeof import('vant/es')['tRow']
     VanUploader: typeof import('vant/es')['Uploader']
   }
 }

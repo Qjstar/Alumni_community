@@ -1,6 +1,6 @@
 import { useUserStatusStore } from '@/store/userStatus';
 
-const routes = [
+const routes:any = [
   {
     path: "/login",
     component: () => import("@/pages/login.vue"),
@@ -47,7 +47,7 @@ const routes = [
   {
     path: "/my/user_status",
     component: () => import("@/pages/my/user_status.vue"),
-    beforeEnter: (to:any, from:any, next:Function) => {
+    beforeEnter: (to:any, next:Function) => {
       const userStatusStore = useUserStatusStore();
 
       if(to.path == '/my/user_status'){

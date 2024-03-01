@@ -5,17 +5,17 @@ import {useUserStatusStore} from "@/store/userStatus"
 const userStore = useUserStore();
 
 //storeToRefs 会跳过所有的 action 属性
-const { userInfo, token } = storeToRefs(userStore);
+const { userInfo } = storeToRefs(userStore);
 
 //action 属性直接解构
 const { updateToken } = userStore;
-const imgUrl = userInfo.avatar ? userInfo.avatar : "https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+const imgUrl = userInfo.value.avatar ? userInfo.value.avatar : "https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
 
 const userStatusStore = useUserStatusStore();
 const userStatustoken = userStatusStore.token;
 
 import router from '@/router';
-import { showSuccessToast, Signature } from 'vant';
+import { showSuccessToast } from 'vant';
 const outlogin = () => {
   showSuccessToast('注销成功');
   updateToken('');
@@ -35,7 +35,7 @@ const outlogin = () => {
       <div class="my-content">
         <van-cell-group>
           <van-cell is-link to="/my/signature"><div class="signature">个性签名：{{ userInfo.signature ? userInfo.signature : "签名" }}</div></van-cell>
-          <van-cell is-link :to="userStatustoken=='未提交' ? '/my/user_status' : false"><div class="user_status">校园认证: {{userInfo.user_status ? userInfo.user_status : "未认证"}}{{ userStatustoken=='已提交' ? '-审核中' : '' }}</div></van-cell>
+          <van-cell is-link to="userStatustoken=='未提交' ? '/my/user_status' : false"><div class="user_status">校园认证: {{userInfo.user_status ? userInfo.user_status : "未认证"}}{{ userStatustoken=='已提交' ? '-审核中' : '' }}</div></van-cell>
           <van-cell title="我的收藏" is-link to="/my/addresses" />
           <van-cell title="检查更新" is-link to="/my/check_update" />
           <van-cell title="关于" is-link to="/my/about" />

@@ -74,7 +74,7 @@ const goToList = () => {
       });
   }
 };
-const deleteContent = async (id: number) => {
+const deleteContent = async (id: string) => {
   campusDelete(id);
   onRefresh();
   console.log('删除成功');

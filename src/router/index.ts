@@ -9,7 +9,7 @@ import { useUserStore } from '@/store/user';
 
 const allowedRoutes = ['/login', '/register']
 
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
   // 这样做是可行的，因为路由器是在其被安装之后开始导航的，
   // 而此时 Pinia 也已经被安装。
   const userStore = useUserStore();

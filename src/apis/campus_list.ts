@@ -7,6 +7,6 @@ export const campusList = (page:number,pageSize:number) => {
 export const campusMyList = () => {
   return HttpClient.get(`/blogs/queryUser`);
 };
-export const campusDelete = (id:number) => {
+export const campusDelete = (id:string) => {
   return HttpClient.delete(`/blogs/delete/${id}`);
 };

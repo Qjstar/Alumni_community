@@ -16,7 +16,7 @@ const HttpClient = axios.create({
  */
 HttpClient.interceptors.request.use(
   (config) => {
-    const storekey = localStorage.getItem('storekey');
+    const storekey:any = localStorage.getItem('storekey');
     const token = JSON.parse(storekey).token;
     // console.log(token);
 
