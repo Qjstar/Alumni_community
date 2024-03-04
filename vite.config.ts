@@ -13,6 +13,7 @@ import viteCompression from 'vite-plugin-compression'
 export default ({mode})=> {
   console.log('mode', loadEnv(mode, process.cwd()).VITE_BASE_URL); 
   return defineConfig({
+    base: "./",
     plugins: [
       vue(),
       AutoImport({
