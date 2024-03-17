@@ -6,7 +6,6 @@ import { ref, watch } from 'vue';
 // import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/user';
 import { campusList, campusMyList, campusDelete } from '@/apis/campus_list';
-import TopBar from '@/components/TopBar.vue';
 
 const loading = ref(false);
 const finished = ref(false);
@@ -36,14 +35,10 @@ let my_list = ref([
 const userStore = useUserStore();
 const { userInfo } = userStore;
 const onLoad = async () => {
-  if (alumni_list.value.length >= 10) {
-    // 加载状态结束
-    loading.value = false;
-  } else {
-    await getList();
-  }
-
-  if (alumni_list.value.length > 20) {
+  await getList();
+  // 加载状态结束
+  loading.value = false;
+  if (alumni_list.value.length >= 30) {
     // 数据全部加载完成
     finished.value = true;
   }
@@ -80,11 +75,11 @@ const deleteContent = async (id: string) => {
   console.log('删除成功');
 };
 const getList = async () => {
-  let { data } = await campusList(1, 10);
-  alumni_list = data.rows.map((row: any) => row);
+  let { data } = await campusList(1, 30);
+  alumni_list.value = data.rows.map((row: any) => row);
 
   let mydata = await campusMyList();
-  my_list = mydata.data;
+  my_list.value = mydata.data;
 };
 watch([my_list, active], async () => {
   await getList();
@@ -120,7 +115,7 @@ watch([my_list, active], async () => {
                   <van-col span="8">
                     <div class="content_img">
                       <van-image :src="item.image" block error-icon="error">
-                        <template v-slot:error>
+                        <template #error>
                           <van-loading type="spinner" size="20" />
                         </template>
                       </van-image>

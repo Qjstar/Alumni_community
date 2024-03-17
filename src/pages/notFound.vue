@@ -24,7 +24,7 @@ const handleLogin = () => {
 </script>
 
 <style>
-.gutter{
-    margin: 0 40px;
+.gutter {
+  margin: 0 40px;
 }
 </style>

@@ -11,7 +11,7 @@ defineProps<{
     <van-row :gutter="8">
       <van-col span="8">
         <van-image :src="themeimg" block error-icon="error">
-          <template v-slot:error>
+          <template #error>
             <van-loading type="spinner" size="20" />
           </template>
         </van-image>

@@ -1,7 +1,7 @@
 <script setup>
 import md5 from 'md5';
 import router from '@/router';
-import { showSuccessToast, showFailToast } from 'vant';
+import { showSuccessToast } from 'vant';
 import { ref, reactive } from 'vue';
 import { register } from '@/apis/register';
 //身份选择
@@ -34,12 +34,12 @@ const togglePasswordVisible = () => {
 };
 
 const validatorPassword = () => {
-  if (isValidPassword(password._value)) {
-    return "密码格式不正确，需要包含大小写字符和特殊字符"
+  if (isValidPassword(password.value._value)) {
+    return '密码格式不正确，需要包含大小写字符和特殊字符';
   }
 };
 const validatorMessage = () => {
-  if (password._value != pass_rep._value) {
+  if (password.value._value != pass_rep.value._value) {
     return '密码不一致，请重新输入';
   } else {
     return true;
@@ -47,7 +47,7 @@ const validatorMessage = () => {
 };
 const validatorPhone = () => {
   const regex = /^1[3-9]\d{9}$/;
-  if (!regex.test(phone._value)) {
+  if (!regex.test(phone.value._value)) {
     return '手机号格式不正确';
   }
 };
@@ -94,8 +94,8 @@ const validatorImgCode = (value) => {
   // 比较加密后的验证码值是否与后端返回的加密验证码值相同
   if (encryptedValue === image_code.img_code) {
     return true;
-  } else{
-    "验证码不正确"
+  } else {
+    ('验证码不正确');
   }
 };
 </script>
@@ -171,7 +171,7 @@ const validatorImgCode = (value) => {
             <image-code
               :change="image_code.change_img_code"
               @click="changeImageCode"
-              @getCode="backImageCode"
+              @get-code="backImageCode"
             ></image-code>
           </van-col>
         </van-row>

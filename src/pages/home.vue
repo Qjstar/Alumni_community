@@ -3,7 +3,10 @@ import { ref, reactive } from 'vue';
 import jpg1 from '@/assets/images/1.jpg';
 import jpg2 from '@/assets/images/2.jpg';
 import jpg3 from '@/assets/images/3.jpg';
-import TopBar from '@/components/TopBar.vue';
+// import TopBar from '@/components/TopBar.vue';
+import { activityList } from '@/apis/activity_list';
+import { campusList } from '@/apis/campus_list';
+import router from '@/router';
 
 const carousel_list = reactive([
   {
@@ -20,44 +23,43 @@ const carousel_list = reactive([
   },
 ]);
 
-const activity = reactive([
+const tj_list = ref([
   {
-    title: 'hello',
-    url: jpg1,
-  },
-  {
-    title: 'hello2',
-    url: jpg2,
-  },
-  {
-    title: 'hello3',
-    url: jpg3,
+    id: '',
+    title: '',
+    username: '',
+    createdAt: '',
+    content: '',
+    image: '',
   },
 ]);
-const text = ref("介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容介绍内容内容")
-const tj_list = ref([1, 2, 3, 4, 5]);
+let activity_list = ref([
+  {
+    activity_image: '',
+    activity_name: '',
+  },
+]);
 const error = ref(false);
 const loading = ref(false);
 const finished = ref(false);
 
-const onLoad = () => {
+const onLoad = async () => {
   // 异步更新数据
-  // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-  setTimeout(() => {
-    for (let i = 0; i < 10; i++) {
-      tj_list.value.push(tj_list.value.length + 1);
-    }
+  let { data } = await activityList(1, 3);
+  activity_list.value = data.rows.map((row: any) => row);
+  let { data: tj_data } = await campusList(1, 10);
+  tj_list.value = tj_data.rows.map((row: any) => row);
+  // 加载状态结束
+  loading.value = false;
 
-    // 加载状态结束
-    loading.value = false;
-
-    // 数据全部加载完成
-    if (tj_list.value.length >= 5) {
-      finished.value = true;
-    }
-  }, 1000);
+  // 数据全部加载完成
+  if (tj_list.value.length >= 10) {
+    finished.value = true;
+  }
 };
-
+function toAffiche() {
+  router.push('/affiche');
+}
 function goTo(url: any) {
   window.open(url);
 }
@@ -65,8 +67,7 @@ function goTo(url: any) {
 
 <template>
   <div class="home">
-
-    <top-bar title="深圳职业技术大学"><van-icon name="bell" />公告</top-bar>
+    <top-bar title="深圳职业技术大学"><van-icon name="bell" @click="toAffiche()" />公告</top-bar>
     <div class="banner">
       <van-swipe class="my-swipe" :autoplay="3000" indicator-color="#f05" lazy-render>
         <van-swipe-item v-for="(item, index) in carousel_list" :key="index">
@@ -78,9 +79,9 @@ function goTo(url: any) {
       <div>热门活动</div>
       <div class="hot_body">
         <van-row :gutter="20" justify="space-around">
-          <van-col span="8" v-for="(item, index) in activity" :key="index">
-            <img :src="item.url" alt="" />
-            <div>{{ item.title }}</div>
+          <van-col v-for="(item, index) in activity_list" :key="index" span="8">
+            <img :src="item.activity_image" alt="" />
+            <div>{{ item.activity_name }}</div>
           </van-col>
         </van-row>
       </div>
@@ -92,20 +93,20 @@ function goTo(url: any) {
           v-model:loading="loading"
           v-model:error="error"
           error-text="请求失败，点击重新加载"
-          @load="onLoad"
           :finished="finished"
           finished-text="没有更多了"
+          @load="onLoad"
         >
-          <van-cell v-for="item in tj_list" :key="item" class="tj_item">
+          <van-cell v-for="item in tj_list" :key="item.id" class="tj_item">
             <div class="tj_box">
               <van-row :gutter="20">
                 <van-col span="6">
-                  <img src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg" alt="" />
+                  <img :src="item.image" alt="" />
                 </van-col>
                 <van-col span="18">
-                  <div class="title">找一个搭子</div>
+                  <div class="title">{{ item.title }}</div>
                   <div class="desc">
-                    <van-text-ellipsis :content="text" rows="2" />
+                    <van-text-ellipsis :content="item.content" rows="2" />
                   </div>
                 </van-col>
               </van-row>
@@ -117,9 +118,8 @@ function goTo(url: any) {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .home {
- 
   .my-swipe {
     img {
       width: 100%;
@@ -134,7 +134,6 @@ function goTo(url: any) {
       width: 100%;
       height: 100%;
     }
- 
   }
   .tj_content {
     padding: 0.5vh 5vw;
@@ -143,20 +142,19 @@ function goTo(url: any) {
       height: 100%;
       overflow: hidden;
     }
-    .tj_item{
+    .tj_item {
       background: rgb(238, 234, 234);
       border-radius: 5px;
       margin-bottom: 10px;
-
     }
     .tj_box {
       height: auto;
       color: #000;
       text-align: left;
-      .title{
+      .title {
         font-size: 1.05rem;
       }
-      .desc{
+      .desc {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

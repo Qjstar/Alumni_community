@@ -1,6 +1,4 @@
-<script setup lang="ts">
-import TabBar from '@/components/TabBar.vue';
-</script>
+<script setup lang="ts"></script>
 <template>
   <div class="index">
     <router-view v-slot="{ Component }">

@@ -1,6 +1,6 @@
 import router from '@/router';
 import axios from 'axios';
-import {useUserStore} from "@/store/user"
+import { useUserStore } from '@/store/user';
 /*
  * 创建实例
  * 与后端服务通信
@@ -16,7 +16,7 @@ const HttpClient = axios.create({
  */
 HttpClient.interceptors.request.use(
   (config) => {
-    const storekey:any = localStorage.getItem('storekey');
+    const storekey: any = localStorage.getItem('storekey');
     const token = JSON.parse(storekey).token;
     // console.log(token);
 
@@ -42,8 +42,8 @@ HttpClient.interceptors.response.use(
     const user = useUserStore();
     const status = error.response.status;
     if (status === 403) {
-      user.updateToken("")
-      router.push("login")
+      user.updateToken('');
+      router.push('login');
     }
     return Promise.reject(error);
   },

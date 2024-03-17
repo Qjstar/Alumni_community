@@ -14,9 +14,8 @@ export const userSexStore = defineStore('user_sex', {
   },
   actions: {
     updateSex() {
-      const userStore = useUserStore();  // 引用其他store
+      const userStore = useUserStore(); // 引用其他store
       if (userStore.userInfo.name !== 'admin') this.sex = Sex.woman;
     },
   },
 });
-    

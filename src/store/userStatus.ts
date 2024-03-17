@@ -8,9 +8,7 @@ export const useUserStatusStore = defineStore('user_status', {
       token: '',
     };
   },
-  getters: {
-
-  },
+  getters: {},
   actions: {
     //更新基础数据类型
     updateToken(token: string) {

@@ -5,10 +5,8 @@ import { showSuccessToast, showFailToast } from 'vant';
 import { ref, reactive } from 'vue';
 import { useUserStore } from '@/store/user'; //路径别名，引入store
 import { login } from '@/apis/login';
-import imageCode from '@/components/imageCode.vue';
 const userStore = useUserStore();
 const { updateToken, updateUserInfo } = userStore;
-
 const phone = ref('');
 const password = ref('');
 const passwordVisible = ref(false);
@@ -45,13 +43,12 @@ const togglePasswordVisible = () => {
   passwordVisible.value = !passwordVisible.value;
 };
 
-
 const onSubmit = async (values) => {
   const { data } = await login({ phone: values.phone, password: values.password });
   if (!data) {
     showFailToast('用户名或密码错误');
   }
-  console.log(data)
+  console.log(data);
   if (data.token != null) {
     updateUserInfo({
       userId: data.id,
@@ -62,6 +59,8 @@ const onSubmit = async (values) => {
       avatar: data.avatar,
       user_status: data.user_status,
     });
+    localStorage.setItem('role', data.role);
+
     updateToken(data.token);
     if (data.user_status == '已认证') {
       router.push('/');
@@ -117,7 +116,7 @@ const toRegister = () => {
             <image-code
               :change="image_code.change_img_code"
               @click="changeImageCode"
-              @getCode="backImageCode"
+              @get-code="backImageCode"
             ></image-code>
           </van-col>
         </van-row>

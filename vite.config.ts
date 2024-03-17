@@ -7,7 +7,7 @@ import Components from 'unplugin-vue-components/vite'
 import { VantResolver } from '@vant/auto-import-resolver';
 
 import viteCompression from 'vite-plugin-compression'
-
+import {viteMockServe} from 'vite-plugin-mock'
 
 // https://vitejs.dev/config/
 export default ({mode})=> {
@@ -22,11 +22,16 @@ export default ({mode})=> {
       Components({
         resolvers: [VantResolver()],
       }),
+      viteMockServe({
+        localEnabled: mode === 'serve',
+      }),
       {
         ...viteCompression(),
         apply: 'build',
       },
+      
     ],
+   
     //这里进行配置别名
     resolve: {
       alias: {
@@ -37,7 +42,8 @@ export default ({mode})=> {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: '@import "@/assets/styles/index.scss";',
+          javascriptEnabled: true,
+          additionalData: '@import "./src/styles/variable.scss";',
         },
       },
     },
@@ -74,3 +80,5 @@ export default ({mode})=> {
 
   });
 }
+
+

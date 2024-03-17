@@ -1,7 +1,6 @@
 <script setup>
-import { ref, reactive } from 'vue';
-import { getCurrentDateTimeFormatted } from '@/utils/date';
-import { showSuccessToast, showToast } from 'vant';
+import { reactive } from 'vue';
+import { showSuccessToast } from 'vant';
 import { useUserStore } from '@/store/user';
 
 // import { alumni_list } from '@/mock/alumni_circle_list';
@@ -12,7 +11,7 @@ import { fileUpdata, filesUpdata } from '@/apis/file';
 const userStore = useUserStore();
 
 //storeToRefs 会跳过所有的 action 属性
-const { userInfo, token } = userStore;
+const { token } = userStore;
 // const fileList = ref([]);
 const alumni_info = reactive({
   id: Math.random() + 1,
@@ -28,7 +27,7 @@ const onSubmit = async (value) => {
   await campusCreate({
     title: value.title,
     content: value.content,
-    image: alumni_info.image.value.length>1 ? alumni_info.image.value[0].path : alumni_info.image.value[0],
+    image: alumni_info.image.value.length > 1 ? alumni_info.image.value[0].path : alumni_info.image.value[0],
   });
   showSuccessToast('发布成功');
   router.push('/alumni_circle');
@@ -37,20 +36,23 @@ const onSubmit = async (value) => {
 const afterRead = async (file) => {
   // console.log(file);
   const formData = new FormData();
-  
+  console.log(typeof file);
   if (file.length > 1) {
-    file.map(value =>{ 
-      formData.append('filelist', value.file)
-    })
-    let {data} = await filesUpdata(formData);
+    file.map((value) => {
+      formData.append('filelist', value.file);
+      console.log(formData);
+    });
+    let { data } = await filesUpdata(formData);
     alumni_info.image.value = data.filePath;
-    console.log(alumni_info.image.value)
+    console.log(alumni_info.image.value);
   } else {
     formData.append('file', file.file);
+    console.log(typeof formData);
+
     let { data } = await fileUpdata(formData);
-    alumni_info.image.value = []
+    alumni_info.image.value = [];
     alumni_info.image.value.push(data.filePath);
-    console.log(alumni_info.image.value[0]);
+    // console.log(alumni_info.image.value[0]);
   }
 };
 </script>
@@ -83,7 +85,7 @@ const afterRead = async (file) => {
       <van-uploader v-model="alumni_info.image" multiple :max-count="3" :after-read="afterRead" />
 
       <div style="margin: 16px">
-        <van-button round block type="primary" native-type="submit" @click="push_list"> 提交 </van-button>
+        <van-button round block type="primary" native-type="submit"> 提交 </van-button>
       </div>
     </van-form>
   </div>

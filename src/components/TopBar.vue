@@ -1,7 +1,7 @@
 <script setup lang="ts">
-    defineProps<{
-        title: string,
-    }>()
+defineProps<{
+  title: string;
+}>();
 </script>
 <template>
   <div class="topbar">
@@ -24,6 +24,5 @@
   line-height: 8vh;
   padding: 0 5vw;
   color: #fff;
- 
 }
 </style>

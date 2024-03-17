@@ -47,7 +47,6 @@ export const useUserStore = defineStore('user', {
   persist: {
     key: 'storekey', // 修改存储的键名，默认为当前 Store 的 id
     storage: window.localStorage, // 存储位置修改为 sessionStorage
-    
   },
   // 自定义持久化字段
   //     persist: {
