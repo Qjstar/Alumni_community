@@ -13,14 +13,17 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
+    "@wangeditor/editor-for-vue": "^5.1.12",
     "axios": "^1.6.2",
     "identify": "^0.1.5",
+    "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "vant": "^4.8.1",
     "vue": "^3.3.11",
+    "vue-quill-editor": "^3.0.6",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {

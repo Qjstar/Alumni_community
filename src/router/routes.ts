@@ -1,6 +1,6 @@
 import { useUserStatusStore } from '@/store/userStatus';
 
-const routes: any = [
+export const routes: any = [
   {
     path: '/login',
     component: () => import('@/pages/login.vue'),
@@ -92,4 +92,10 @@ const routes: any = [
   },
 ];
 
-export default routes;
+export const adminRouter:any = [
+  {
+    path: '/user-manage',
+    name: 'userManage',
+    component: () => import('@/pages/userManage/index.vue'),
+  },
+];

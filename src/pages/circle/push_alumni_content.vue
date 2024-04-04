@@ -81,6 +81,7 @@ const afterRead = async (file) => {
           placeholder="请输入内容"
           show-word-limit
         />
+       
       </van-cell-group>
       <van-uploader v-model="alumni_info.image" multiple :max-count="3" :after-read="afterRead" />
 

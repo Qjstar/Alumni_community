@@ -18,4 +18,6 @@ export interface UserModel {
   signature: string; //签名
   avatar: string; //用户图像地址
   user_status: string; //用户状态
+  role: string; //身份
+  code: string;
 }

@@ -6,6 +6,7 @@ import { Icon } from 'vant';
 import 'vant/lib/index.css';
 
 import './styles/index.scss';
+
 import router from './router/index';
 
 import store from './store';

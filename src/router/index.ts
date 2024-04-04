@@ -1,15 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import routes from './routes';
+import {routes} from './routes';
 import nprogress from 'nprogress';
 import 'nprogress/nprogress.css';
+import { useUserStore } from '@/store/user';
 
 const router = createRouter({
   history: createWebHistory(), //可传参数，配置base路径，例如'/app'
   routes,
 });
-import { useUserStore } from '@/store/user';
 
 const allowedRoutes = ['/login', '/register'];
+
 
 router.beforeEach((to) => {
   // 这样做是可行的，因为路由器是在其被安装之后开始导航的，
@@ -26,9 +27,8 @@ router.beforeEach((to) => {
   //   // next();
   // }
 });
-router.afterEach((to, from, next: any) => {
+router.afterEach((to, from) => {
   nprogress.done();
-  next();
 });
 
 export default router;

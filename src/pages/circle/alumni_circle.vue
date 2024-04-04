@@ -38,6 +38,7 @@ const onLoad = async () => {
   await getList();
   // 加载状态结束
   loading.value = false;
+  // 最大加载30条
   if (alumni_list.value.length >= 30) {
     // 数据全部加载完成
     finished.value = true;
@@ -81,9 +82,9 @@ const getList = async () => {
   let mydata = await campusMyList();
   my_list.value = mydata.data;
 };
-watch([my_list, active], async () => {
-  await getList();
-});
+// watch([my_list, active], async () => {
+//   await getList();
+// });
 </script>
 <template>
   <div class="alumni_circle">
