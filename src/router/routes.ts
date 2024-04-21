@@ -1,5 +1,5 @@
-import { useUserStatusStore } from '@/store/userStatus';
 
+import { useUserStore } from '@/store/user';
 export const routes: any = [
   {
     path: '/login',
@@ -72,20 +72,23 @@ export const routes: any = [
   {
     path: '/my/user_status',
     component: () => import('@/pages/my/user_status.vue'),
-    beforeEnter: (to: any, next: Function) => {
-      const userStatusStore = useUserStatusStore();
+    // beforeEnter: (to: any, next: Function) => {
 
-      if (to.path == '/my/user_status') {
-        if (userStatusStore.token != '已提交') {
-          next();
-        } else {
-          alert('已认证');
-          next({ name: 'home' });
-        }
-      }
-    },
+    //   if (to.path == '/my/user_status') {
+    //     if (useUserStore().getUserStatus != '已认证') {
+    //       next();
+    //     } else {
+    //       alert('已认证');
+    //       next({ name: 'home' });
+    //     }
+    //   }
+    // },
   },
-
+  {
+    path: '/user-manage',
+    name: 'userManage',
+    component: () => import('@/pages/userManage/index.vue'),
+  },
   {
     path: '/:pathMatch(.*)*',
     component: () => import('@/pages/notFound.vue'),

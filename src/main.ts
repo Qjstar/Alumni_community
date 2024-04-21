@@ -1,14 +1,13 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-
 import { Icon } from 'vant';
+
 // 2. 引入组件样式
 import 'vant/lib/index.css';
 
 import './styles/index.scss';
 
 import router from './router/index';
-
 import store from './store';
 
 import allGlobalComponent from './components';

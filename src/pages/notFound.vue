@@ -1,3 +1,14 @@
+<script setup lang="ts">
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+console.log(router.getRoutes());
+
+const handleLogin = () => {
+  router.push('/login');
+};
+</script>
+
 <template>
   <div>
     <el-card class="box-card" shadow="always">
@@ -12,16 +23,6 @@
     <el-button type="primary" plain @click="handleLogin">登录</el-button>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-
-const handleLogin = () => {
-  router.push('/login');
-};
-</script>
 
 <style>
 .gutter {

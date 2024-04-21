@@ -7,7 +7,8 @@ import jpg3 from '@/assets/images/3.jpg';
 import { activityList } from '@/apis/activity_list';
 import { campusList } from '@/apis/campus_list';
 import router from '@/router';
-
+import { computed } from 'vue';
+console.log(router.getRoutes());
 const carousel_list = reactive([
   {
     carouselUrl: jpg1,
@@ -39,6 +40,19 @@ let activity_list = ref([
     activity_name: '',
   },
 ]);
+const barrage_list = ref([
+  { id: 100, text: '大帅哥' },
+  { id: 101, text: '大美女' },
+  { id: 102, text: '来呀' },
+  { id: 103, text: '快来呀' },
+  { id: 106, text: '666' },
+]);
+const addBarrage = ()=>{
+  barrage_list.value.push({ id: Math.random(), text: '由本帅开发' });
+}
+computed((barrage_list) => {
+    barrage_list.value.push({ id: Math.random(), text: '由本帅开发' });
+});
 const error = ref(false);
 const loading = ref(false);
 const finished = ref(false);
@@ -67,14 +81,16 @@ function goTo(url: any) {
 
 <template>
   <div class="home">
-    <top-bar title="深圳职业技术大学"><van-icon name="bell" @click="toAffiche()" />公告</top-bar>
-    <div class="banner">
-      <van-swipe class="my-swipe" :autoplay="3000" indicator-color="#f05" lazy-render>
-        <van-swipe-item v-for="(item, index) in carousel_list" :key="index">
-          <img :src="item.carouselUrl" alt="" @click="goTo(item.redirectUrl)" />
-        </van-swipe-item>
-      </van-swipe>
-    </div>
+    <top-bar title="深圳职业技术大学" @click="addBarrage"><van-icon name="bell" @click="toAffiche()" />公告</top-bar>
+    <van-barrage v-model="barrage_list">
+      <div class="banner video">
+        <van-swipe class="my-swipe" :autoplay="3000" indicator-color="#f05" lazy-render>
+          <van-swipe-item v-for="(item, index) in carousel_list" :key="index">
+            <img :src="item.carouselUrl" alt="" @click="goTo(item.redirectUrl)" />
+          </van-swipe-item>
+        </van-swipe>
+      </div>
+    </van-barrage>
     <div class="hot_activity">
       <div>热门活动</div>
       <div class="hot_body">

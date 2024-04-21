@@ -1,18 +1,18 @@
 <script setup>
 import { ref, reactive } from 'vue';
 import md5 from 'md5';
-import { useUserStatusStore } from '@/store/userStatus';
 import { showSuccessToast, showFailToast } from 'vant';
+import { userAuthenticate } from '@/apis/user_list';
+import { fileUpdata } from '@/apis/file';
+import { useUserStore } from '@/store/user';
 import router from '@/router';
+const user = useUserStore();
 
 const form = reactive({
   username: '',
   stuNo: '',
-  imgUrl: [],
+  stuCard: [],
 });
-
-const userStatusStore = useUserStatusStore();
-const { updateToken, token } = userStatusStore;
 
 const image_code_pd = ref('');
 const image_code = reactive({
@@ -45,12 +45,32 @@ const validatorImgCode = (value) => {
 };
 
 const onClickLeft = () => history.back();
+// 图片上传
+const afterRead = async (file) => {
+  // console.log(file);
+  const formData = new FormData();
 
-const onSubmit = () => {
-  updateToken('已提交');
-  console.log(token);
-  showSuccessToast('提交成功');
-  router.push('/my');
+  formData.append('file', file.file);
+  console.log(typeof formData);
+
+  let { data } = await fileUpdata(formData);
+  form.stuCard.value = [];
+  form.stuCard.value.push(data.filePath);
+
+  console.log(form.stuCard);
+};
+const onSubmit = async () => {
+  await userAuthenticate(user.getUserId, { username: form.username, stuNo: form.stuNo, stuCard: form.stuCard.value[0] })
+    .then((res) => {
+      showSuccessToast('认证成功');
+      user.updateStatus("已认证")
+      router.push('/my');
+    })
+    .catch((err) => {
+      showFailToast(err.message);
+    });
+  // console.log(token);
+  // showSuccessToast('提交成功');
 };
 </script>
 <template>
@@ -94,7 +114,7 @@ const onSubmit = () => {
         </van-row>
         <van-cell>
           请上传学生证或者学生卡：
-          <van-uploader v-model="form.imgUrl.value" multiple :max-count="1" />
+          <van-uploader v-model="form.stuCard" :max-count="1" :after-read="afterRead" />
         </van-cell>
       </van-cell-group>
       <div style="margin: 16px">

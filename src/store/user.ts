@@ -3,7 +3,7 @@ import router from '@/router';
 import { routes, adminRouter } from '@/router/routes';
 import { SET_TOKEN, GET_TOKEN, REMOVE_TOKEN } from '@/utils/token';
 import { login } from '@/apis/login';
-import cloneDeep from "lodash/cloneDeep"
+import cloneDeep from 'lodash/cloneDeep';
 // defineStore 第一个参数是id，必需且值唯一
 export const useUserStore = defineStore('user', {
   //state返回一个函数，防止作用域污染
@@ -18,12 +18,14 @@ export const useUserStore = defineStore('user', {
         avatar: '',
         user_status: '',
       },
-      token: GET_TOKEN()!,
+      token: GET_TOKEN(),
     };
   },
   getters: {
     vipName: (state) => state.userInfo.nickname + 'vip',
     getUserInfo: (state) => state.userInfo,
+    getUserId: (state) => state.userInfo.userId,
+    getUserStatus: (state) => state.userInfo.user_status,
   },
   actions: {
     //更新整个对象
@@ -42,6 +44,9 @@ export const useUserStore = defineStore('user', {
     updateName(name: string) {
       this.userInfo.name = name;
     },
+    updateStatus(role: string) {
+      this.userInfo.user_status = role;
+    },
     //更新基础数据类型
     updateToken(token: string) {
       this.token = token;
@@ -51,17 +56,23 @@ export const useUserStore = defineStore('user', {
       // success=>token
       // error=>error.message
       // if (res.code === 200) {
-        this.token = res.data.token as unknown as string;
-        // 持久化
-        SET_TOKEN(res.data as unknown as string);
-        this.userInfo.name = res.data.username as string;
-        this.userInfo.role = res.data.role as string;
-        this.userInfo.avatar = res.data.avatar as string;
-        cloneDeep([routes,...adminRouter]).forEach((item: any) => {
+      this.token = res.data.token as unknown as string;
+      SET_TOKEN(res.data.token);
+      // 持久化
+      SET_TOKEN(res.data as unknown as string);
+      this.userInfo.userId = res.data.userId as string;
+      this.userInfo.name = res.data.account as string;
+      this.userInfo.role = res.data.role as string;
+      this.userInfo.avatar = res.data.avatar as string;
+      this.userInfo.user_status = res.data.user_status as string;
+      if (this.userInfo.role == '管理员') {
+        let ad = cloneDeep([...adminRouter]);
+        ad.forEach((item: any) => {
           router.addRoute(item); // 动态添加路由
         });
-        console.log(router.getRoutes())
-        return 'ok';
+        console.log(router.getRoutes());
+      }
+      return 'ok';
       // } else {
       //   return Promise.reject(new Error(res.data as unknown as string));
       // }

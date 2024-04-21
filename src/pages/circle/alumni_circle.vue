@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { showToast, showConfirmDialog } from 'vant';
 import router from '@/router';
-import { ref, watch } from 'vue';
-// import { alumni_list } from '../mock/alumni_circle_list';
-// import { storeToRefs } from 'pinia';
+import { ref } from 'vue';
 import { useUserStore } from '@/store/user';
 import { campusList, campusMyList, campusDelete } from '@/apis/campus_list';
 
@@ -82,9 +80,6 @@ const getList = async () => {
   let mydata = await campusMyList();
   my_list.value = mydata.data;
 };
-// watch([my_list, active], async () => {
-//   await getList();
-// });
 </script>
 <template>
   <div class="alumni_circle">
@@ -129,12 +124,13 @@ const getList = async () => {
         </div>
       </van-tab>
       <van-tab title="我的发帖">
-        <van-swipe-cell v-for="item in my_list" :key="item.id">
+        <van-swipe-cell v-for="item in my_list" :key="item.id" v-if="my_list.length!=0 ">
           <van-card :desc="item.content" :title="item.title" class="goods-card" :thumb="item.image" />
           <template #right>
             <van-button square text="删除" type="danger" class="delete-button" @click="deleteContent(item.id)" />
           </template>
         </van-swipe-cell>
+        {{ my_list.length==0 ? '暂无数据' :'' }}
       </van-tab>
     </van-tabs>
   </div>

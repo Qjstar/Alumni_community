@@ -19,3 +19,11 @@ export interface ActivityModel {
   activity_location: string;
   organizing_unit: string;
 }
+
+// 报名表接口请求参数
+export interface signup{
+  activityId: string;
+  userId: string;
+  activityName: string;
+  userName: string;
+}

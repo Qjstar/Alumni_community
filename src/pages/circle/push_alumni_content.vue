@@ -83,7 +83,7 @@ const afterRead = async (file) => {
         />
        
       </van-cell-group>
-      <van-uploader v-model="alumni_info.image" multiple :max-count="3" :after-read="afterRead" />
+      <van-uploader v-model="alumni_info.image" :max-count="3" :after-read="afterRead" />
 
       <div style="margin: 16px">
         <van-button round block type="primary" native-type="submit"> 提交 </van-button>

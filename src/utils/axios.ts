@@ -16,11 +16,13 @@ const HttpClient = axios.create({
  */
 HttpClient.interceptors.request.use(
   (config) => {
-    const storekey: any = localStorage.getItem('storekey');
-    const token = JSON.parse(storekey).token;
-    // console.log(token);
-
+    const storekey: string | null = localStorage.getItem('storekey');
+    let token = null;
+    if (storekey != null) {
+      token = JSON.parse(storekey).token;
+    }
     config.headers.authorization = 'Bearer ' + token;
+
     return config;
   },
   (error) => {

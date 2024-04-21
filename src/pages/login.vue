@@ -5,13 +5,9 @@ import { useRouter, useRoute } from 'vue-router';
 import { showSuccessToast, showFailToast } from 'vant';
 import { ref, reactive } from 'vue';
 import { useUserStore } from '@/store/user'; //路径别名，引入store
-import { login } from '@/apis/login';
 const userStore = useUserStore();
-const { updateToken, updateUserInfo } = userStore;
-const phone = ref('');
-const password = ref('');
+
 const passwordVisible = ref(false);
-const image_code_pd = ref('');
 const image_code = reactive({
   change_img_code: false, // 刷新验证码
   img_code: '', // 加密后的验证码值
@@ -78,6 +74,7 @@ const onSubmit = async (values: any) => {
   //   }
   //   // console.log('submit', values);
   // }
+  console.log(loginForm)
   await userStore.userLogin(loginForm);
   let redirect: string = $route.query.redirect as string;
   $router.push({ path: redirect || '/' });

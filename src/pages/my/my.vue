@@ -1,24 +1,22 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/user'; //路径别名，引入store
-import { useUserStatusStore } from '@/store/userStatus';
+import router from '@/router';
+import { showSuccessToast } from 'vant';
+import { REMOVE_TOKEN } from '@/utils/token';
 const userStore = useUserStore();
 
-//storeToRefs 会跳过所有的 action 属性
+// //storeToRefs 会跳过所有的 action 属性
 const { userInfo } = storeToRefs(userStore);
 
 //action 属性直接解构
-const { updateToken } = userStore;
-const imgUrl = userInfo.value.avatar ? userInfo.value.avatar : 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg';
+// const imgUrl = userStore.userInfo.avatar ? userStore.userInfo.avatar : 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg';
 
-const userStatusStore = useUserStatusStore();
-const userStatustoken = userStatusStore.token;
+const user_status = userStore.userInfo.user_status;
 
-import router from '@/router';
-import { showSuccessToast } from 'vant';
 const outlogin = () => {
   showSuccessToast('注销成功');
-  updateToken('');
+  REMOVE_TOKEN();
   router.push('/login');
 };
 </script>
@@ -26,7 +24,7 @@ const outlogin = () => {
   <div class="my">
     <div class="my-container">
       <div class="my-header">
-        <img :src="imgUrl" alt="头像" class="avatar" />
+        <img :src="userInfo.avatar" alt="头像" class="avatar" />
         <div class="user-info">
           <div class="username">{{ userInfo.nickname }}</div>
           <div class="role">{{ userInfo.role }}</div>
@@ -37,16 +35,18 @@ const outlogin = () => {
           <van-cell is-link to="/my/signature"
             ><div class="signature">个性签名：{{ userInfo.signature ? userInfo.signature : '签名' }}</div></van-cell
           >
-          <van-cell is-link :to:string="userStatustoken == '未提交' ? '/my/user_status' : false"
+          <van-cell is-link :to="userInfo.user_status == '未认证' ? '/my/user_status' : false"
             ><div class="user_status">
               校园认证: {{ userInfo.user_status ? userInfo.user_status : '未认证'
-              }}{{ userStatustoken == '已提交' ? '-审核中' : '' }}
+              }}{{  userInfo.user_status != '已认证' ? '-审核中' : '' }}
             </div></van-cell
           >
           <van-cell title="我的收藏" is-link to="/my/addresses" />
-          <van-cell title="发布活动" is-link to="/activity_post" />
+          <van-cell title="用户管理" is-link to="/user-manage" v-if="userInfo.role == '管理员'" />
+          <van-cell title="公告管理" is-link to="/user-manage" v-if="userInfo.role == '管理员'" />
+          <van-cell title="发布活动" is-link to="/activity_post" v-if="userInfo.role == '管理员'" />
           <van-cell title="检查更新" is-link to="/my/update" />
-          <van-cell title="关于帮忙" is-link to="/my/about" />
+          <van-cell title="关于帮助" is-link to="/my/about" />
           <van-cell title="设置" is-link to="/my/settings" />
         </van-cell-group>
         <van-button block color="#f10" @click="outlogin"> 退出登录 </van-button>

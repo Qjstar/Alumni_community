@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watchEffect } from 'vue';
 import { activityList, activityQueryByUnit } from '@/apis/activity_list';
 import router from '@/router';
 import { useUserStore } from '@/store/user';
@@ -83,14 +83,14 @@ let bj_list = ref([
     updatedAt: '',
   },
 ]);
-watch([active, activity_list, xy_list, bj_list], async () => {
+watchEffect([active, activity_list, xy_list, bj_list], async () => {
   if (active.value == 1) {
     let { data } = await activityQueryByUnit('院级');
     // console.log(data);
     xy_list.value = data.map((row: any) => row);
     // console.log(xy_list);
   }
-  if (active.value == 1) {
+  if (active.value == 2) {
     let { data } = await activityQueryByUnit('班级');
     // console.log(data);
     bj_list.value = data.map((row: any) => row);
@@ -167,7 +167,7 @@ const onRefresh = () => {
           />
         </div>
       </van-tab>
-      <van-tab title="活动管理" :disabled="userInfo.role !== 'admin' ? false : true">活动管理</van-tab>
+      <van-tab title="活动管理" :disabled="userInfo.role == '管理员' ? false : true">活动管理</van-tab>
     </van-tabs>
   </div>
 </template>

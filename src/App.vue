@@ -1,6 +1,6 @@
 <script setup lang="ts"></script>
 <template>
-  <keep-alive include="['home']">
+  <keep-alive include="['home','user-manage']">
     <router-view v-slot="{ Component }">
       <Transition name="fade" mode="out-in">
         <component :is="Component" />

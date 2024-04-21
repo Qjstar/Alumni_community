@@ -34,12 +34,12 @@ const togglePasswordVisible = () => {
 };
 
 const validatorPassword = () => {
-  if (isValidPassword(password.value._value)) {
+  if (isValidPassword(password.value)) {
     return '密码格式不正确，需要包含大小写字符和特殊字符';
   }
 };
 const validatorMessage = () => {
-  if (password.value._value != pass_rep.value._value) {
+  if (password.value != pass_rep.value) {
     return '密码不一致，请重新输入';
   } else {
     return true;
@@ -47,7 +47,7 @@ const validatorMessage = () => {
 };
 const validatorPhone = () => {
   const regex = /^1[3-9]\d{9}$/;
-  if (!regex.test(phone.value._value)) {
+  if (!regex.test(phone.value)) {
     return '手机号格式不正确';
   }
 };

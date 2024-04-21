@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { activityGetById } from '@/apis/activity_list';
+import { activityGetById, activitySignup, getSignupCount, isSignup } from '@/apis/activity_list';
+import { useUserStore } from '@/store/user';
+import { showSuccessToast } from 'vant';
+const user = useUserStore();
 const route = useRoute();
 
 let activity_id = route.params.id;
@@ -16,27 +19,45 @@ let activity = ref({
   activity_location: '',
   activity_image: '',
   organizing_unit: '',
+  act_count: '',
   createdAt: '',
   updatedAt: '',
 });
-let subText = ref(false);
+let isRegistr = ref(false);
 const getActivityInfo = async () => {
   let { data } = await activityGetById(activity_id);
+  let {data : count} = await getSignupCount(activity_id);
   // console.log(data);
   activity.value = data;
+  activity.value.act_count = count.signupCount
 };
 const onClickLeft = () => {
   history.back();
 };
 onMounted(async () => {
   await getActivityInfo();
+  let { data } = await isSignup(user.getUserInfo.userId, activity_id);
+  if (data.isSignedUp) {
+    isRegistr.value = true;
+  }
 });
-const subActivity = () => {
-  console.log('true');
-  if (subText.value == false) {
-    subText.value = true;
+const subActivity = async () => {
+  if (!isRegistr) {
+    await activitySignup({
+      activityId: activity.value.id,
+      activityName: activity.value.activity_name,
+      userId: user.getUserInfo.userId,
+      userName: user.getUserInfo.name,
+    })
+      .then(() => {
+        isRegistr.value = true;
+        showSuccessToast('报名成功');
+      })
+      .catch((e) => {
+        // console.log(e.response.data.error);
+      });
   } else {
-    subText.value = false;
+    showSuccessToast('已经报名过此活动');
   }
 };
 </script>
@@ -55,18 +76,18 @@ const subActivity = () => {
         <van-image width="100" height="100" :src="activity.activity_image" />
       </div>
       <p class="act_content">活动内容：{{ activity.activity_content }}</p>
+      <p>当前报名人数：{{ activity.act_count }}</p>
     </div>
-    <van-button :type="subText ? 'success' : 'primary'" block class="btn-sub" @click="subActivity()">{{
-      subText ? '已报名' : '报名活动'
+    <van-button :type="isRegistr ? 'success' : 'primary'" block class="btn-sub" @click="subActivity()">{{
+      isRegistr ? '已报名' : '报名活动'
     }}</van-button>
   </div>
 </template>
 
 <style lang="scss">
 .activity_info {
-
 }
-.act_name{
+.act_name {
   text-align: center;
   font-size: 18px;
   margin: 5px 0;
@@ -74,7 +95,7 @@ const subActivity = () => {
 }
 .box {
   padding: 0 20px 20px;
-  p{
+  p {
     line-height: 1.3;
     margin: 5px 0;
   }
