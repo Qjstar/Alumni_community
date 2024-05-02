@@ -53,9 +53,6 @@ export const useUserStore = defineStore('user', {
     },
     async userLogin(data: any) {
       let res = await login(data);
-      // success=>token
-      // error=>error.message
-      // if (res.code === 200) {
       this.token = res.data.token as unknown as string;
       SET_TOKEN(res.data.token);
       // 持久化
@@ -73,9 +70,6 @@ export const useUserStore = defineStore('user', {
         console.log(router.getRoutes());
       }
       return 'ok';
-      // } else {
-      //   return Promise.reject(new Error(res.data as unknown as string));
-      // }
     },
   },
   // 开始数据持久化

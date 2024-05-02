@@ -20,13 +20,13 @@ const changeImageCode = () => {
 };
 
 // 接收组件返回加密后的验证码值
-const backImageCode = (code) => {
+const backImageCode = (code:string) => {
   image_code.img_code = code;
   console.log('data', image_code.img_code);
 };
 
 //验证图片验证码
-const validatorImgCode = (value) => {
+const validatorImgCode = (value:string) => {
   // 将用户输入的验证码值进行 MD5 加密
   const encryptedValue = md5(value.toLowerCase());
 
@@ -45,36 +45,8 @@ const loginForm = reactive({
   password: '123456',
   verifyCode: "1234"
 })
-const onSubmit = async (values: any) => {
-  //可以传死loginForm
-  // const { data } = await login({ phone: values.phone, password: values.password });
-  // if (!data) {
-  //   showFailToast('用户名或密码错误');
-  // }
-  // console.log(data);
-  // if (data.token != null) {
-  //   updateUserInfo({
-  //     userId: data.id,
-  //     name: data.username,
-  //     nickname: data.nickname,
-  //     signature: data.signature ? data.signature : null,
-  //     role: data.role,
-  //     avatar: data.avatar,
-  //     user_status: data.user_status,
-  //   });
-  //   localStorage.setItem('role', data.role);
 
-  //   updateToken(data.token);
-  //   if (data.user_status == '已认证') {
-  //     router.push('/');
-  //     showSuccessToast('登录成功');
-  //   } else {
-  //     router.push('/user_status');
-  //     showSuccessToast('登录成功');
-  //   }
-  //   // console.log('submit', values);
-  // }
-  console.log(loginForm)
+const onSubmit = async (values: any) => {
   await userStore.userLogin(loginForm);
   let redirect: string = $route.query.redirect as string;
   $router.push({ path: redirect || '/' });

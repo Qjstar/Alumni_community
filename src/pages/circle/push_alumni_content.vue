@@ -23,7 +23,6 @@ const alumni_info = reactive({
 });
 const onClickLeft = () => history.back();
 const onSubmit = async (value) => {
-  // alumni_list.unshift(alumni_info);
   await campusCreate({
     title: value.title,
     content: value.content,
@@ -34,25 +33,20 @@ const onSubmit = async (value) => {
 };
 
 const afterRead = async (file) => {
-  // console.log(file);
   const formData = new FormData();
-  console.log(typeof file);
+  //多文件
   if (file.length > 1) {
     file.map((value) => {
       formData.append('filelist', value.file);
-      console.log(formData);
     });
     let { data } = await filesUpdata(formData);
     alumni_info.image.value = data.filePath;
-    console.log(alumni_info.image.value);
   } else {
+    // 单文件
     formData.append('file', file.file);
-    console.log(typeof formData);
-
     let { data } = await fileUpdata(formData);
     alumni_info.image.value = [];
     alumni_info.image.value.push(data.filePath);
-    // console.log(alumni_info.image.value[0]);
   }
 };
 </script>
