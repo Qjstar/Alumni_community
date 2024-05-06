@@ -1,4 +1,3 @@
-
 import { useUserStore } from '@/store/user';
 export const routes: any = [
   {
@@ -90,12 +89,17 @@ export const routes: any = [
     component: () => import('@/pages/userManage/index.vue'),
   },
   {
+    path: '/add-user',
+    name: 'addUser',
+    component: () => import('@/pages/userManage/addUser.vue'),
+  },
+  {
     path: '/:pathMatch(.*)*',
     component: () => import('@/pages/notFound.vue'),
   },
 ];
 
-export const adminRouter:any = [
+export const adminRouter: any = [
   {
     path: '/user-manage',
     name: 'userManage',

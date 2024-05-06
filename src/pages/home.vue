@@ -47,11 +47,11 @@ const barrage_list = ref([
   { id: 103, text: '快来呀' },
   { id: 106, text: '666' },
 ]);
-const addBarrage = ()=>{
+const addBarrage = () => {
   barrage_list.value.push({ id: Math.random(), text: '由本帅开发' });
-}
+};
 computed((barrage_list) => {
-    barrage_list.value.push({ id: Math.random(), text: '由本帅开发' });
+  barrage_list.value.push({ id: Math.random(), text: '由本帅开发' });
 });
 const error = ref(false);
 const loading = ref(false);
@@ -92,10 +92,10 @@ function goTo(url: any) {
       </div>
     </van-barrage>
     <div class="hot_activity">
-      <div>热门活动</div>
+      <div class="box-title">热门活动</div>
       <div class="hot_body">
         <van-row :gutter="20" justify="space-around">
-          <van-col v-for="(item, index) in activity_list" :key="index" span="8">
+          <van-col v-for="(item, index) in activity_list" :key="index" span="7">
             <img :src="item.activity_image" alt="" />
             <div>{{ item.activity_name }}</div>
           </van-col>
@@ -103,7 +103,7 @@ function goTo(url: any) {
       </div>
     </div>
     <div class="tj_content">
-      <div>推荐</div>
+      <div class="box-title">推荐</div>
       <div class="tj_body">
         <van-list
           v-model:loading="loading"
@@ -136,11 +136,20 @@ function goTo(url: any) {
 
 <style scoped lang="scss">
 .home {
+  .box-title {
+    font-weight: 700;
+    font-style: 18rem;
+    margin: 10px 0;
+  }
   .my-swipe {
     img {
       width: 100%;
       height: 100%;
     }
+  }
+  .hot_body > div >div{
+    border: 2px solid salmon;
+    margin: 5px;
   }
   .hot_activity {
     margin-bottom: 5vh;
@@ -177,5 +186,10 @@ function goTo(url: any) {
       }
     }
   }
+}
+img{
+  width: 100%;
+  height: 100%;
+  text-align: center;
 }
 </style>

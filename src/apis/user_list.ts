@@ -14,15 +14,15 @@ export const queryUserList = () => {
 export const queryUserById = (id: any) => {
   return HttpClient.get(userUrl.get_by_id + id);
 };
-export const userCreate = (params: UserParams) => {
-  return HttpClient.post<UserModel>(userUrl.create_url, params);
+export const userCreate = (body: UserParams) => {
+  return HttpClient.post<UserModel>(userUrl.create_url, body);
 };
 
 export const userUpdate = (id: string) => {
   return HttpClient.get(userUrl.update_url + id);
 };
 export const userDelete = (id: string) => {
-  return HttpClient.get(userUrl.delete_url + id);
+  return HttpClient.delete(userUrl.delete_url + id);
 };
 
 //用户认证

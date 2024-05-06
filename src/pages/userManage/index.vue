@@ -14,6 +14,8 @@
         is-link
         @click="editUser(user)"
       >
+        <div>{{user.role}}</div>
+        <div>{{user.stuNo}}</div>
         <template #right-icon>
           <van-icon name="delete" @click="deleteUser(user)" />
         </template>
@@ -26,11 +28,13 @@ import { queryUserList, queryUserById, userCreate, userUpdate, userDelete } from
 import { ref } from 'vue';
 import { listdecrypt } from '@/utils/mdPwd';
 import { showConfirmDialog } from 'vant';
+import { useRouter } from 'vue-router';
+
 const users = ref([]);
 const loading = ref(false);
 const finished = ref(false);
 const search = ref('');
-
+const router = useRouter();
 const onLoad = async () => {
   let { data } = await queryUserList();
   console.log(data);
@@ -45,6 +49,7 @@ const onLoad = async () => {
 
 const addUser = () => {
   // 添加用户逻辑
+  router.push('add-user');
 };
 
 const editUser = (user) => {
@@ -66,8 +71,8 @@ const deleteUser = (user) => {
   showConfirmDialog({ message: '确定要删除这个用户吗？', theme: 'round-button' })
     .then(() => {
       users.value = users.value.filter((item) => item !== user);
-      console.log(user.id)
-      userDelete(user.id)
+      console.log(user.id);
+      userDelete(user.id);
     })
     .catch((e) => {
       e;

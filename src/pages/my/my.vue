@@ -41,9 +41,9 @@ const outlogin = () => {
               }}{{  userInfo.user_status != '已认证' ? '-审核中' : '' }}
             </div></van-cell
           >
-          <van-cell title="我的收藏" is-link to="/my/addresses" />
+          <!-- <van-cell title="我的收藏" is-link to="/my/addresses" /> -->
           <van-cell title="用户管理" is-link to="/user-manage" v-if="userInfo.role == '管理员'" />
-          <van-cell title="公告管理" is-link to="/user-manage" v-if="userInfo.role == '管理员'" />
+          <!-- <van-cell title="公告管理" is-link to="/user-manage" v-if="userInfo.role == '管理员'" /> -->
           <van-cell title="发布活动" is-link to="/activity_post" v-if="userInfo.role == '管理员'" />
           <van-cell title="检查更新" is-link to="/my/update" />
           <van-cell title="关于帮助" is-link to="/my/about" />

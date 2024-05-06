@@ -1,35 +1,37 @@
 <script setup>
-import { reactive } from 'vue';
+import { reactive, onMounted } from 'vue';
 import { showSuccessToast } from 'vant';
 import { useUserStore } from '@/store/user';
 
-// import { alumni_list } from '@/mock/alumni_circle_list';
 import router from '@/router';
-import { campusCreate } from '@/apis/create_campus';
+import { campusCreate, campusDetail, campusUpdate } from '@/apis/campus_list';
 import { fileUpdata, filesUpdata } from '@/apis/file';
-
+import { useRoute } from 'vue-router';
+const route = useRoute();
+const id = route.query.id;
+const type = route.query.type;
 const userStore = useUserStore();
 
 //storeToRefs 会跳过所有的 action 属性
 const { token } = userStore;
-// const fileList = ref([]);
 const alumni_info = reactive({
   id: Math.random() + 1,
   title: '',
   content: '',
-  image: [],
-  // user: userInfo.name,
-  // date: getCurrentDateTimeFormatted(),
+  image:[],
 });
 const onClickLeft = () => history.back();
 const onSubmit = async (value) => {
-  await campusCreate({
+  let api = type=='edit'? campusUpdate : campusCreate;
+  await api({
+    id: id,
     title: value.title,
     content: value.content,
-    image: alumni_info.image.value.length > 1 ? alumni_info.image.value[0].path : alumni_info.image.value[0],
+    image: alumni_info.image.length > 1 ? alumni_info.image[0].url : alumni_info.image[0].url,
+  }).then(() => {
+    showSuccessToast(type == 'edit' ? '编辑成功' : '发布成功');
+    router.push('/alumni_circle');
   });
-  showSuccessToast('发布成功');
-  router.push('/alumni_circle');
 };
 
 const afterRead = async (file) => {
@@ -40,19 +42,34 @@ const afterRead = async (file) => {
       formData.append('filelist', value.file);
     });
     let { data } = await filesUpdata(formData);
-    alumni_info.image.value = data.filePath;
+    alumni_info.image = data.filePath;
   } else {
     // 单文件
     formData.append('file', file.file);
     let { data } = await fileUpdata(formData);
-    alumni_info.image.value = [];
-    alumni_info.image.value.push(data.filePath);
+    alumni_info.image[0].url = data.filePath;
   }
 };
+
+onMounted(() => {
+  if (type == 'edit') {
+    campusDetail(id).then((res) => {
+      alumni_info.title = res.data.title;
+      alumni_info.content = res.data.content;
+      alumni_info.image[0] = {url: ''}
+      alumni_info.image[0].url = res.data.image;
+    });
+  }
+});
 </script>
 <template>
   <div class="push_alumni_content">
-    <van-nav-bar title="发布内容" left-text="返回" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar
+      :title="type == 'edit' ? '编辑内容' : '发布内容'"
+      left-text="返回"
+      left-arrow
+      @click-left="onClickLeft"
+    />
     <van-form @submit="onSubmit">
       <van-cell-group inset>
         <van-field
@@ -75,12 +92,11 @@ const afterRead = async (file) => {
           placeholder="请输入内容"
           show-word-limit
         />
-       
       </van-cell-group>
       <van-uploader v-model="alumni_info.image" :max-count="3" :after-read="afterRead" />
 
       <div style="margin: 16px">
-        <van-button round block type="primary" native-type="submit"> 提交 </van-button>
+        <van-button round block type="primary" native-type="submit">{{ type == 'edit' ? '修改' : '发布' }} </van-button>
       </div>
     </van-form>
   </div>

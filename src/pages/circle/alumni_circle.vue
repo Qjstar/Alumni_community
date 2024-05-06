@@ -4,7 +4,7 @@ import router from '@/router';
 import { ref } from 'vue';
 import { useUserStore } from '@/store/user';
 import { campusList, campusMyList, campusDelete } from '@/apis/campus_list';
-
+import { Dialog } from 'vant';
 const loading = ref(false);
 const finished = ref(false);
 const refreshing = ref(false);
@@ -68,10 +68,24 @@ const goToList = () => {
       });
   }
 };
-const deleteContent = async (id: string) => {
-  campusDelete(id);
-  onRefresh();
-  console.log('删除成功');
+const deleteContent = (id: string) => {
+  showConfirmDialog({
+    title: '提示',
+    message: '是否删除？',
+  }).then(async () => {
+    await campusDelete(id);
+    onRefresh();
+  });
+};
+
+const editContent = async (id: string) => {
+  router.push({
+    path: '/push_alumni_content',
+    query: {
+      id: id,
+      type: 'edit',
+    },
+  });
 };
 const getList = async () => {
   let { data } = await campusList(1, 30);
@@ -94,7 +108,7 @@ const getList = async () => {
           <van-pull-refresh v-model="refreshing" success-text="刷新成功" @refresh="onRefresh">
             <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
               <van-cell v-for="item in alumni_list" :key="item.id" class="content_body">
-                <div class="title">标题:{{ item.title }}</div>
+                <div class="title">话题：{{ item.title }}</div>
                 <van-row :gutter="8">
                   <van-col span="16">
                     <div class="content">
@@ -124,13 +138,14 @@ const getList = async () => {
         </div>
       </van-tab>
       <van-tab title="我的发帖">
-        <van-swipe-cell v-for="item in my_list" :key="item.id" v-if="my_list.length!=0 ">
+        <van-swipe-cell v-for="item in my_list" :key="item.id" v-if="my_list.length != 0">
           <van-card :desc="item.content" :title="item.title" class="goods-card" :thumb="item.image" />
           <template #right>
+            <van-button square text="编辑" type="primary" class="delete-button" @click="editContent(item.id)" />
             <van-button square text="删除" type="danger" class="delete-button" @click="deleteContent(item.id)" />
           </template>
         </van-swipe-cell>
-        {{ my_list.length==0 ? '暂无数据' :'' }}
+        {{ my_list.length == 0 ? '暂无数据' : '' }}
       </van-tab>
     </van-tabs>
   </div>
