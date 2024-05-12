@@ -64,7 +64,7 @@ const onSubmit = async (values) => {
   });
   showSuccessToast('添加成功');
   router.push('/user-manage');
-  console.log('submit', values);
+  // console.log('submit', values);
 };
 
 

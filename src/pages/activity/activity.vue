@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, watchEffect } from 'vue';
-import { activityList, activityQueryByUnit } from '@/apis/activity_list';
+import { activityList, activityQueryByUnit, activityDelete, activityUpdate } from '@/apis/activity_list';
 import router from '@/router';
 import { useUserStore } from '@/store/user';
 import { showToast } from 'vant/lib/toast/function-call';
+import { showConfirmDialog } from 'vant';
 
 const userStore = useUserStore();
-
 //storeToRefs 会跳过所有的 action 属性
 const { userInfo } = userStore;
 
@@ -86,15 +86,11 @@ let bj_list = ref([
 watchEffect([active, activity_list, xy_list, bj_list], async () => {
   if (active.value == 1) {
     let { data } = await activityQueryByUnit('院级');
-    // console.log(data);
     xy_list.value = data.map((row: any) => row);
-    // console.log(xy_list);
   }
   if (active.value == 2) {
     let { data } = await activityQueryByUnit('班级');
-    // console.log(data);
     bj_list.value = data.map((row: any) => row);
-    // console.log(xy_list);
   }
 });
 
@@ -102,15 +98,9 @@ const getList = async () => {
   let { data } = await activityList(1, 30);
   activity_list.value = data.rows.map((row: any) => row);
   let { data: xydata } = await activityQueryByUnit('院级');
-  // console.log(data);
   xy_list.value = xydata.map((row: any) => row);
   let { data: bjdata } = await activityQueryByUnit('班级');
-  // console.log(data);
   bj_list.value = bjdata.map((row: any) => row);
-};
-
-const get_activity_info = (e: string) => {
-  router.push(`/activity_info/${e}`);
 };
 
 onMounted(async () => {
@@ -140,22 +130,44 @@ const adonSearch = () => {
 };
 const onCancel = () => {
   searchQuery.value = '';
+  getList();
 };
 const adonRefresh = () => {
   // 这里可以调用API刷新活动列表数据
   adrefreshing.value = false;
 };
 
-
-
-const editActivity = (id: any) => {
+const get_activity_info = (id: string) => {
+  router.push(`/activity_info/${id}`);
+};
+//编辑发布
+const editActivity = (id: string, type: any) => {
   // 这里可以编辑活动
-  console.log('编辑活动', id);
+  // console.log('编辑活动', id);
+  router.push({
+    path: '/activity_post',
+    query: { id, type },
+  });
 };
 
-const deleteActivity = (id: any) => {
+const deleteActivity = async (id: any) => {
   // 这里可以删除活动
-  console.log('删除活动', id);
+  const confirmResult: any = showConfirmDialog({
+    title: '删除活动',
+    message: '确定要删除这个活动吗？',
+    width: '50wv',
+  });
+
+  // 如果用户点击确认按钮
+  if (confirmResult) {
+    try {
+      await activityDelete(id);
+      // 可以在这里添加成功提示或相关操作
+    } catch (error) {
+      // 处理错误
+      console.error('删除活动时出错:', error);
+    }
+  }
 };
 </script>
 <template>
@@ -201,7 +213,13 @@ const deleteActivity = (id: any) => {
       </van-tab>
       <van-tab title="活动管理" v-if="userInfo.role == '管理员'">
         <div class="activity-management-page">
-          <van-search show-action v-model="searchQuery" placeholder="请输入搜索关键词" @search="adonSearch" @cancel="onCancel" />
+          <van-search
+            show-action
+            v-model="searchQuery"
+            placeholder="请输入搜索关键词"
+            @search="adonSearch"
+            @cancel="onCancel"
+          />
           <van-pull-refresh v-model="adrefreshing" success-text="刷新成功" @refresh="adonRefresh">
             <div v-for="item in filteredActivities" :key="item.id" class="activity-card">
               <ListCard
@@ -212,7 +230,7 @@ const deleteActivity = (id: any) => {
                 @click="get_activity_info(item.id)"
               />
               <div class="action-buttons">
-                <van-button type="warning" size="small" @click="editActivity(item.id)">编辑</van-button>
+                <van-button type="warning" size="small" @click="editActivity(item.id, 'edit')">编辑</van-button>
                 <van-button type="danger" size="small" @click="deleteActivity(item.id)">删除</van-button>
               </div>
             </div>

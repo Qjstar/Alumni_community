@@ -4,7 +4,6 @@ import router from '@/router';
 import { ref } from 'vue';
 import { useUserStore } from '@/store/user';
 import { campusList, campusMyList, campusDelete } from '@/apis/campus_list';
-import { Dialog } from 'vant';
 const loading = ref(false);
 const finished = ref(false);
 const refreshing = ref(false);
@@ -72,6 +71,7 @@ const deleteContent = (id: string) => {
   showConfirmDialog({
     title: '提示',
     message: '是否删除？',
+    width: '50wv',
   }).then(async () => {
     await campusDelete(id);
     onRefresh();
@@ -139,7 +139,7 @@ const getList = async () => {
       </van-tab>
       <van-tab title="我的发帖">
         <van-swipe-cell v-for="item in my_list" :key="item.id" v-if="my_list.length != 0">
-          <van-card :desc="item.content" :title="item.title" class="goods-card" :thumb="item.image" />
+          <van-card :desc="item.content" :title="item.title" class="goods-card" :thumb="item.image?item.image:'暂无图片'" />
           <template #right>
             <van-button square text="编辑" type="primary" class="delete-button" @click="editContent(item.id)" />
             <van-button square text="删除" type="danger" class="delete-button" @click="deleteContent(item.id)" />

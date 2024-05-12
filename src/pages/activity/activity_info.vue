@@ -7,8 +7,8 @@ import { showSuccessToast } from 'vant';
 const user = useUserStore();
 const route = useRoute();
 
-let activity_id = route.params.id;
-let activity = ref({
+let activity_id:any = route.params.id;
+const activity = ref({
   id: '',
   creator_id: '',
   activity_creator: '',
@@ -23,11 +23,10 @@ let activity = ref({
   createdAt: '',
   updatedAt: '',
 });
-let isRegistr = ref(false);
+let isRegistr:any = ref(false);
 const getActivityInfo = async () => {
   let { data } = await activityGetById(activity_id);
   let {data : count} = await getSignupCount(activity_id);
-  // console.log(data);
   activity.value = data;
   activity.value.act_count = count.signupCount
 };
@@ -54,7 +53,6 @@ const subActivity = async () => {
         showSuccessToast('报名成功');
       })
       .catch((e) => {
-        // console.log(e.response.data.error);
       });
   } else {
     showSuccessToast('已经报名过此活动');

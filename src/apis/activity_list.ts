@@ -1,11 +1,14 @@
 import HttpClient from '@/utils/axios';
-import { ActivityParams, ActivityModel,signup } from './model/activityModel';
+import { ActivityParams, ActivityModel, signup } from './model/activityModel';
+
 enum ActivityUrl {
   get_by_id = '/activity/query/',
   create_url = '/activity/create',
   unit_url = '/activity/queryByUnit/',
   signup_url = '/activity/signup',
-  getSignupCount = '/activity/getSignupCount/'
+  getSignupCount = '/activity/getSignupCount/',
+  update = '/activity/update',
+  delete = '/activity/delete/:id',
 }
 export const activityList = (page: number, pageSize: number) => {
   return HttpClient.get(`/activity/query?page=${page}&pageSize=${pageSize}`);
@@ -19,16 +22,22 @@ export const activityCreate = (params: ActivityParams) => {
 export const activityQueryByUnit = (unit: string) => {
   return HttpClient.get(ActivityUrl.unit_url + unit);
 };
+export const activityUpdate = (body: ActivityParams) => {
+  return HttpClient.patch(ActivityUrl.update, body);
+};
+export const activityDelete = (id: string) => {
+  return HttpClient.delete(ActivityUrl.delete.replace(':id', id));
+};
 
 // 活动报名
 export const activitySignup = (params: signup) => {
-  return HttpClient.post(ActivityUrl.signup_url,params);
+  return HttpClient.post(ActivityUrl.signup_url, params);
 };
 // 报名人数
 export const getSignupCount = (id: string) => {
   return HttpClient.get(ActivityUrl.getSignupCount + id);
 };
 // 是否已报名活动
-export const isSignup = (userId: string,activityId: string) => {
-  return HttpClient.get('/activity/checkSignup/'+userId+'/'+activityId);
+export const isSignup = (userId: string, activityId: string) => {
+  return HttpClient.get('/activity/checkSignup/' + userId + '/' + activityId);
 };

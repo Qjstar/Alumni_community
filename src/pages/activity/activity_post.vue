@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { fileUpdata, filesUpdata } from '@/apis/file';
 import router from '@/router';
-import { showSuccessToast } from 'vant';
-import { activityCreate } from '@/apis/activity_list';
+import { useRoute, useRouter } from 'vue-router';
+import { showSuccessToast, showToast } from 'vant';
+import { formatDate } from '@/utils/date';
+import { activityCreate, activityUpdate, activityGetById } from '@/apis/activity_list';
 interface Lol {
   activity_name: string;
   activity_description: string;
@@ -13,7 +15,7 @@ interface Lol {
   activity_location: string;
   organizing_unit: string;
 }
-let activity = reactive<Lol>({
+let activity = ref<Lol>({
   activity_name: '',
   activity_description: '',
   activity_content: '',
@@ -22,21 +24,30 @@ let activity = reactive<Lol>({
   activity_location: '',
   organizing_unit: '',
 });
+const minDate = new Date(2020, 1, 1);
+const maxDate = new Date(2040, 11, 31);
+const route = useRoute();
+const id: any = route.query.id;
+const type = route.query.type;
 
 const onSubmit = async (values: any) => {
-  console.log('submit', values);
-  console.log(activity);
-  await activityCreate({
-    activity_name: activity.activity_name,
-    activity_description: activity.activity_description,
-    activity_content: activity.activity_content,
-    activity_image: activity.activity_image[0],
-    activity_time: activity.activity_time,
-    activity_location: activity.activity_location,
-    organizing_unit: activity.organizing_unit,
+  const api = type == 'edit' ? activityUpdate : activityCreate;
+  let params = {
+    id: id,
+    activity_name: activity.value.activity_name,
+    activity_description: activity.value.activity_description,
+    activity_content: activity.value.activity_content,
+    activity_image: activity.value.activity_image.length == 1 ? activity.value.activity_image[0].url : null,
+    activity_time: activity.value.activity_time,
+    activity_location: activity.value.activity_location,
+    organizing_unit: activity.value.organizing_unit,
+  };
+  await api(params).then(() => {
+    showToast({ message: type == 'edit' ? '修改成功' : '发布成功', position: 'top' });
+    setTimeout(() => {
+      router.push('/activity');
+    }, 500);
   });
-  showSuccessToast('发布成功');
-  router.push('/activity');
 };
 const onClickLeft = () => {
   history.back();
@@ -57,33 +68,44 @@ const afterRead = async (file: any) => {
       formData.append('filelist', value.file);
     });
     let { data } = await filesUpdata(formData);
-    activity.activity_image = data.filePath;
-    console.log(activity.activity_image);
+    activity.value.activity_image = data.filePath;
   } else {
     formData.append('file', file.file);
     let { data } = await fileUpdata(formData);
-    // console.log(data)
-    activity.activity_image = [];
-    activity.activity_image.push(data.filePath);
-    console.log(activity.activity_image);
+    activity.value.activity_image = [{ url: data.filePath }];
   }
 };
 const showPicker = ref(false);
 const showPicker2 = ref(false);
 const onConfirm = ({ selectedValues }: any) => {
-  activity.activity_time = selectedValues.join('/');
+  activity.value.activity_time = selectedValues.join('/');
   showPicker.value = false;
 };
+const getList = async () => {
+  if (!type) return;
+  let { data } = await activityGetById(id);
 
+  activity.value = data;
+  activity.value.activity_time = formatDate(new Date(data.activity_time));
+  activity.value.activity_image = [{ url: data.activity_image }];
+};
 const onConUnit = ({ selectedOptions }: any) => {
-  activity.organizing_unit = selectedOptions[0]?.text;
+  activity.value.organizing_unit = selectedOptions[0]?.text;
   showPicker2.value = false;
 };
+onMounted(() => {
+  getList();
+});
 </script>
 
 <template>
   <div class="activity_post">
-    <van-nav-bar title="发布活动" left-text="返回" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar
+      :title="type == 'edit' ? '编辑活动' : '发布活动'"
+      left-text="返回"
+      left-arrow
+      @click-left="onClickLeft"
+    />
     <!-- <div>activity_post</div> -->
     <div class="post_form">
       <van-form @submit="onSubmit">
@@ -140,7 +162,12 @@ const onConUnit = ({ selectedOptions }: any) => {
           />
 
           <van-popup v-model:show="showPicker" position="bottom">
-            <van-date-picker @confirm="onConfirm" @cancel="showPicker = false" />
+            <van-date-picker
+              :min-date="minDate"
+              :max-date="maxDate"
+              @confirm="onConfirm"
+              @cancel="showPicker = false"
+            />
           </van-popup>
 
           <van-field
@@ -165,7 +192,9 @@ const onConUnit = ({ selectedOptions }: any) => {
           </van-popup>
         </van-cell-group>
         <div style="margin: 16px">
-          <van-button round block type="primary" native-type="submit"> 提交 </van-button>
+          <van-button round block type="primary" native-type="submit">
+            {{ type == 'edit' ? '修改' : '发布' }}
+          </van-button>
         </div>
       </van-form>
     </div>

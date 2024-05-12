@@ -1,7 +1,8 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import { Icon } from 'vant';
-
+import { Dialog } from 'vant';
+import { Toast } from 'vant';
 // 2. 引入组件样式
 import 'vant/lib/index.css';
 
@@ -14,6 +15,8 @@ import allGlobalComponent from './components';
 
 const app = createApp(App);
 app.use(Icon);
+app.use(Dialog);
+app.use(Toast);
 app.use(router); //注册路由
 app.use(store);
 app.use(allGlobalComponent);

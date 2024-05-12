@@ -61,7 +61,7 @@ const onSubmit = async (values) => {
   });
   showSuccessToast('注册成功');
   router.push('/login');
-  console.log('submit', values);
+  // console.log('submit', values);
 };
 const toLogin = () => {
   router.push('/login');
@@ -83,7 +83,7 @@ const changeImageCode = () => {
 // 接收组件返回加密后的验证码值
 const backImageCode = (code) => {
   image_code.img_code = code;
-  console.log('data', image_code.img_code);
+  // console.log('data', image_code.img_code);
 };
 
 //验证图片验证码

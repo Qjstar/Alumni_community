@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
+import { Image as VanImage } from 'vant';
 import jpg1 from '@/assets/images/1.jpg';
 import jpg2 from '@/assets/images/2.jpg';
 import jpg3 from '@/assets/images/3.jpg';
@@ -8,7 +9,7 @@ import { activityList } from '@/apis/activity_list';
 import { campusList } from '@/apis/campus_list';
 import router from '@/router';
 import { computed } from 'vue';
-console.log(router.getRoutes());
+// console.log(router.getRoutes());
 const carousel_list = reactive([
   {
     carouselUrl: jpg1,
@@ -86,7 +87,7 @@ function goTo(url: any) {
       <div class="banner video">
         <van-swipe class="my-swipe" :autoplay="3000" indicator-color="#f05" lazy-render>
           <van-swipe-item v-for="(item, index) in carousel_list" :key="index">
-            <img :src="item.carouselUrl" alt="" @click="goTo(item.redirectUrl)" />
+            <van-image :src="item.carouselUrl" alt="" @click="goTo(item.redirectUrl)" />
           </van-swipe-item>
         </van-swipe>
       </div>
@@ -96,7 +97,7 @@ function goTo(url: any) {
       <div class="hot_body">
         <van-row :gutter="20" justify="space-around">
           <van-col v-for="(item, index) in activity_list" :key="index" span="7">
-            <img :src="item.activity_image" alt="" />
+            <van-image class="hotImage" width="80" height="80"  :src="item.activity_image" alt="" />
             <div>{{ item.activity_name }}</div>
           </van-col>
         </van-row>
@@ -147,7 +148,14 @@ function goTo(url: any) {
       height: 100%;
     }
   }
+  .hot_body{
+  
+  }
   .hot_body > div >div{
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    justify-content: center;
     border: 2px solid salmon;
     margin: 5px;
   }
@@ -191,5 +199,7 @@ img{
   width: 100%;
   height: 100%;
   text-align: center;
+  margin: 0 auto;
 }
+
 </style>

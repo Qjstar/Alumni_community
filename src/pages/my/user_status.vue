@@ -1,7 +1,7 @@
 <script setup>
 import { ref, reactive } from 'vue';
 import md5 from 'md5';
-import { showSuccessToast, showFailToast } from 'vant';
+import { showSuccessToast, showFailToast, showDialog } from 'vant';
 import { userAuthenticate } from '@/apis/user_list';
 import { fileUpdata } from '@/apis/file';
 import { useUserStore } from '@/store/user';
@@ -28,7 +28,6 @@ const changeImageCode = () => {
 // 接收组件返回加密后的验证码值
 const backImageCode = (code) => {
   image_code.img_code = code;
-  console.log('data', image_code.img_code);
 };
 
 //验证图片验证码
@@ -47,30 +46,35 @@ const validatorImgCode = (value) => {
 const onClickLeft = () => history.back();
 // 图片上传
 const afterRead = async (file) => {
-  // console.log(file);
   const formData = new FormData();
 
   formData.append('file', file.file);
-  console.log(typeof formData);
 
   let { data } = await fileUpdata(formData);
-  form.stuCard.value = [];
-  form.stuCard.value.push(data.filePath);
-
-  console.log(form.stuCard);
+  form.stuCard = [{ url: data.filePath }];
 };
 const onSubmit = async () => {
-  await userAuthenticate(user.getUserId, { username: form.username, stuNo: form.stuNo, stuCard: form.stuCard.value[0] })
-    .then((res) => {
-      showSuccessToast('认证成功');
-      user.updateStatus("已认证")
-      router.push('/my');
-    })
-    .catch((err) => {
-      showFailToast(err.message);
+  if (form.stuCard.length < 1) {
+    showDialog({
+      title: '提示',
+      message: '请上传学生证',
+      width: '50vw'
     });
-  // console.log(token);
-  // showSuccessToast('提交成功');
+  } else {
+    await userAuthenticate(user.getUserId, {
+      username: form.username,
+      stuNo: form.stuNo,
+      stuCard: form.stuCard,
+    })
+      .then((res) => {
+        showSuccessToast('认证成功');
+        user.updateStatus('已认证');
+        router.push('/my');
+      })
+      .catch((err) => {
+        showFailToast(err.message);
+      });
+  }
 };
 </script>
 <template>

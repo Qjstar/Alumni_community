@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, onMounted } from 'vue';
-import { showSuccessToast } from 'vant';
+import { showSuccessToast,showToast } from 'vant';
 import { useUserStore } from '@/store/user';
 
 import router from '@/router';
@@ -18,18 +18,18 @@ const alumni_info = reactive({
   id: Math.random() + 1,
   title: '',
   content: '',
-  image:[],
+  image: [],
 });
 const onClickLeft = () => history.back();
 const onSubmit = async (value) => {
-  let api = type=='edit'? campusUpdate : campusCreate;
+  let api = type == 'edit' ? campusUpdate : campusCreate;
   await api({
     id: id,
     title: value.title,
     content: value.content,
-    image: alumni_info.image.length > 1 ? alumni_info.image[0].url : alumni_info.image[0].url,
+    image: alumni_info.image.length==1 ? alumni_info.image[0].url : null,
   }).then(() => {
-    showSuccessToast(type == 'edit' ? '编辑成功' : '发布成功');
+    showToast({message:type == 'edit' ? '编辑成功' : '发布成功',position: top});
     router.push('/alumni_circle');
   });
 };
@@ -56,8 +56,7 @@ onMounted(() => {
     campusDetail(id).then((res) => {
       alumni_info.title = res.data.title;
       alumni_info.content = res.data.content;
-      alumni_info.image[0] = {url: ''}
-      alumni_info.image[0].url = res.data.image;
+      alumni_info.image = [{ url: res.data.image }];
     });
   }
 });
