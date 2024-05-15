@@ -152,22 +152,20 @@ const editActivity = (id: string, type: any) => {
 
 const deleteActivity = async (id: any) => {
   // 这里可以删除活动
-  const confirmResult: any = showConfirmDialog({
+  showConfirmDialog({
     title: '删除活动',
     message: '确定要删除这个活动吗？',
     width: '50wv',
-  });
-
-  // 如果用户点击确认按钮
-  if (confirmResult) {
+  }).then(async () => {
+    // 如果用户点击确认按钮
     try {
       await activityDelete(id);
-      // 可以在这里添加成功提示或相关操作
+      getList();
     } catch (error) {
       // 处理错误
       console.error('删除活动时出错:', error);
     }
-  }
+  });
 };
 </script>
 <template>

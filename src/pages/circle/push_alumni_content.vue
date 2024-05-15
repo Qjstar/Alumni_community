@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, onMounted } from 'vue';
-import { showSuccessToast,showToast } from 'vant';
+import { showSuccessToast, showToast } from 'vant';
 import { useUserStore } from '@/store/user';
 
 import router from '@/router';
@@ -27,9 +27,9 @@ const onSubmit = async (value) => {
     id: id,
     title: value.title,
     content: value.content,
-    image: alumni_info.image.length==1 ? alumni_info.image[0].url : null,
+    image: alumni_info.image.length == 1 ? alumni_info.image[0].url : null,
   }).then(() => {
-    showToast({message:type == 'edit' ? '编辑成功' : '发布成功',position: top});
+    showSuccessToast({ message: type == 'edit' ? '编辑成功' : '发布成功', });
     router.push('/alumni_circle');
   });
 };

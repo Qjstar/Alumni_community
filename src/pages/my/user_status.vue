@@ -64,7 +64,7 @@ const onSubmit = async () => {
     await userAuthenticate(user.getUserId, {
       username: form.username,
       stuNo: form.stuNo,
-      stuCard: form.stuCard,
+      stuCard: form.stuCard[0].url,
     })
       .then((res) => {
         showSuccessToast('认证成功');

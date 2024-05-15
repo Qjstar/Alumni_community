@@ -7,7 +7,7 @@ import { showSuccessToast } from 'vant';
 const user = useUserStore();
 const route = useRoute();
 
-let activity_id:any = route.params.id;
+let activity_id: any = route.params.id;
 const activity = ref({
   id: '',
   creator_id: '',
@@ -23,25 +23,30 @@ const activity = ref({
   createdAt: '',
   updatedAt: '',
 });
-let isRegistr:any = ref(false);
+let isRegistr: any = ref(false);
 const getActivityInfo = async () => {
   let { data } = await activityGetById(activity_id);
-  let {data : count} = await getSignupCount(activity_id);
+  let { data: count } = await getSignupCount(activity_id);
   activity.value = data;
-  activity.value.act_count = count.signupCount
+  activity.value.act_count = count.signupCount;
 };
 const onClickLeft = () => {
   history.back();
 };
-onMounted(async () => {
+const getList = async () => {
   await getActivityInfo();
   let { data } = await isSignup(user.getUserInfo.userId, activity_id);
-  if (data.isSignedUp) {
+  if (data.isSignedUp == 0) {
+    isRegistr.value = false;
+  } else {
     isRegistr.value = true;
   }
+};
+onMounted(async () => {
+  getList();
 });
 const subActivity = async () => {
-  if (!isRegistr) {
+  if (isRegistr.value == false) {
     await activitySignup({
       activityId: activity.value.id,
       activityName: activity.value.activity_name,
@@ -50,10 +55,10 @@ const subActivity = async () => {
     })
       .then(() => {
         isRegistr.value = true;
+        getList();
         showSuccessToast('报名成功');
       })
-      .catch((e) => {
-      });
+      .catch((e) => {});
   } else {
     showSuccessToast('已经报名过此活动');
   }
