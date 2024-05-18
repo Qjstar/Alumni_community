@@ -95,7 +95,7 @@ function goTo(url: any) {
     <div class="hot_activity">
       <div class="box-title">热门活动</div>
       <div class="hot_body">
-        <van-row :gutter="20" justify="space-around">
+        <van-row :gutter="0" justify="space-around">
           <van-col v-for="(item, index) in activity_list" :key="index" span="7">
             <van-image class="hotImage" width="80" height="80"  :src="item.activity_image" alt="" />
             <div>{{ item.activity_name }}</div>
@@ -149,7 +149,11 @@ function goTo(url: any) {
     }
   }
   .hot_body{
-  
+    text-align: center;
+    img{
+      width: 100%;
+      height: 100%;
+    }
   }
   .hot_body > div >div{
     display: flex;
@@ -157,7 +161,8 @@ function goTo(url: any) {
     align-items: center;
     justify-content: center;
     border: 2px solid salmon;
-    margin: 5px;
+    padding: 10px;
+    border-radius: 10px;
   }
   .hot_activity {
     margin-bottom: 5vh;
